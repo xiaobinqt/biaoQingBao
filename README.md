@@ -6,7 +6,7 @@
 ## Installing
 
 ```shell
-$ composer require xiaobinqt/biaoQingBao -vvv
+$ composer require xiaobinqt/biao-qing-bao -vvv
 ```
 
 ## Usage
