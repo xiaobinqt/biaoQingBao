@@ -1,0 +1,19 @@
+{
+    "name": "xiaobinqt/biaoQingBao",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "xiaobinqt",
+            "email": "binnarcissus@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Xiaobinqt\\BiaoQingBao\\": "src"
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^6.5",
+        "ext-json": "*"
+    }
+}
