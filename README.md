@@ -12,6 +12,8 @@ $ composer require xiaobinqt/biao-qing-bao -vvv
 ## Usage
 + 使用
     + $guzzleOptions 非必须参数，是请求时需要的一些配置，比如我公司的网走了代理，就需要配置一个 proxy。
+    + setNeedCount() 在不需要获取全部时，可能设置需要获取的数量
+    + setSuffix() 设置获取特定后缀的图片表情包
 ```
 $keyWorks = "我艹";
 $guzzleOptions = array(
@@ -21,6 +23,10 @@ $guzzleOptions = array(
     ]
 );
 $bqb = new \Xiaobinqt\BiaoQingBao\BiaoQingBao($keyWorks, $guzzleOptions);
+$bqb->setNeedCount(1);
+$bqb->setSuffix(array(
+    "gif"
+));
 $rs = $bqb->getEmojiList();
 echo $rs;
 ```
@@ -36,8 +42,8 @@ echo $rs;
     + 正确
         ```
            {
-             "error": -1,
-             "msg": "cURL error 7: Failed to connect to www.doutula.com port 443: Timed out (see https:\/\/curl.haxx.se\/libcurl\/c\/libcurl-errors.html)",
+             "error": 0,
+             "msg": "success",
              "data": [
                "http://ww1.sinaimg.cn/bmiddle/9150e4e5gy1g2x4gj710cj209q09p0sr.jpg",
                "http://ww2.sinaimg.cn/bmiddle/9150e4e5gy1g59e69khv7j209c05jaa0.jpg",

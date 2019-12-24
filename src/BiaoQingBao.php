@@ -17,8 +17,13 @@ class BiaoQingBao
     public $keyWords = "";
     protected $guzzleOptions = array();
     private $url = "";
-    // todo
-    protected $suffix = array();
+    protected $suffix = array(
+        "png",
+        "jpg",
+        "jpeg",
+        "gif"
+    );
+    protected $num = null; // 获取几条数据
 
     /**
      * BiaoQingBao constructor.
@@ -31,14 +36,46 @@ class BiaoQingBao
         $this->url = "https://www.doutula.com/search?type=photo&more=1&keyword=";
     }
 
+
+    /**
+     * @param array $suffix
+     * @description
+     * @author v_bivwei
+     */
     public function setSuffix(array $suffix)
     {
         $this->suffix = $suffix;
     }
 
+
+    /**
+     * @return array
+     * @description
+     * @author v_bivwei
+     */
     public function getSuffix()
     {
         return $this->suffix;
+    }
+
+    /**
+     * @param $num
+     * @description
+     * @author v_bivwei
+     */
+    public function setNeedCount($num)
+    {
+        $this->num = $num;
+    }
+
+    /**
+     * @return null
+     * @description
+     * @author v_bivwei
+     */
+    public function getNeedCount()
+    {
+        return $this->num;
     }
 
 
@@ -50,6 +87,20 @@ class BiaoQingBao
     protected function getHttpClient()
     {
         return new Client();
+    }
+
+
+    /**
+     * @return int|null
+     * @description
+     * @author v_bivwei
+     */
+    private function MaxNum()
+    {
+        if (is_null($this->num) || $this->num <= 0) {
+            return PHP_INT_MAX;
+        }
+        return $this->num;
     }
 
 
@@ -93,7 +144,15 @@ class BiaoQingBao
                 foreach ($childImg as $child) {
                     $imgUrl = $child->getAttribute("data-original");
                     if ($imgUrl) {
+                        $suffix = $this->getFileSuffix($imgUrl);
+                        if (!in_array($suffix, $this->getSuffix())) {
+                            continue;
+                        }
                         array_push($urlArr, $imgUrl);
+                        if ($this->whetherReachMax($urlArr)) {
+                            $html->clear();
+                            return $this->returnInfo(0, "success", $urlArr);
+                        }
                     }
                 }
             }
@@ -115,6 +174,9 @@ class BiaoQingBao
                 for ($i = 2; $i <= $max; $i++) {
                     $url = $this->url . $this->keyWords . "&page=" . $i;
                     $this->getSourceByUrl($url, $urlArr);
+                    if ($this->whetherReachMax($urlArr)) {
+                        return $this->returnInfo(0, "success", $urlArr);
+                    }
                 }
 
             }
@@ -156,6 +218,10 @@ class BiaoQingBao
             foreach ($childImg as $child) {
                 $imgUrl = $child->getAttribute("data-original");
                 if ($imgUrl) {
+                    $suffix = $this->getFileSuffix($imgUrl);
+                    if (!in_array($suffix, $this->getSuffix())) {
+                        continue;
+                    }
                     array_push($urlArr, $imgUrl);
                 }
             }
@@ -181,6 +247,30 @@ class BiaoQingBao
                 "data"  => $data
             )
         );
+    }
+
+
+    /**
+     * @param $array
+     * @return bool
+     * @description 是否到达设置的最大值
+     * @author v_bivwei
+     */
+    private function whetherReachMax($array)
+    {
+        return count($array) >= $this->MaxNum();
+    }
+
+
+    /**
+     * @param $fileName
+     * @return false|string
+     * @description 获取文件后缀名
+     * @author v_bivwei
+     */
+    private function getFileSuffix($fileName)
+    {
+        return strtolower(substr($fileName, strrpos($fileName, '.') + 1));
     }
 
 
