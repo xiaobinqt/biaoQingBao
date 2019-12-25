@@ -78,6 +78,16 @@ class BiaoQingBao
         return $this->num;
     }
 
+    public function setGuzzleOptions(array $guzzleOptions)
+    {
+        $this->guzzleOptions = $guzzleOptions;
+    }
+
+
+    public function getGuzzleOptions()
+    {
+        return $this->guzzleOptions;
+    }
 
     /**
      * @return Client
